@@ -14,7 +14,7 @@ if [ $GITHUB_EVENT_NAME == "repository_dispatch" ]; then
 # Push to a branch
 elif [ $GITHUB_EVENT_NAME == "push" ]; then
     exit 0
-# Pull Request Actions
+# Pull Request Actions [opened, reopened, synchronize]
 elif [ $GITHUB_EVENT_NAME == "pull_request" ]; then
     action=`echo $EVENT_JSON | jq -r '.action'`
     mergeable_state=`echo $EVENT_JSON | jq -r '.pull_request.mergeable_state'`
@@ -27,7 +27,7 @@ elif [ ! $GITHUB_EVENT_NAME == "release" ]; then
     exit 0
 fi
 
-# Release
+# Release Actions
 action=`echo $EVENT_JSON | jq -r '.action'`
 assets_url=`echo $EVENT_JSON | jq -r '.release.assets_url'`
 draft=`echo $EVENT_JSON | jq -r '.release.draft'`
