@@ -12,7 +12,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build Release
-      run: >
-        sudo apt-get install -y ca-certificates curl jq
-        env
-        cat $GITHUB_EVENT_PATH
+      run: sudo apt-get install -y ca-certificates curl jq
+    - name: Build Release
+      run: env && cat $GITHUB_EVENT_PATH
