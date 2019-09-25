@@ -9,16 +9,12 @@ on:
 
 jobs:
   build:
-    name: Build the project
+    name: Build
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v1
-    - name: Run a one-line script
+    - name: Build
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: bash ./.github/scripts/release.sh
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+      run: bash ./.github/scripts/push.sh
