@@ -1,0 +1,15 @@
+name: Test Event
+
+on: repository_dispatch
+
+jobs:
+  run:
+    name: Dispatch Event
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run a script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: bash ./.github/scripts/release.sh
