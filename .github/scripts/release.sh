@@ -27,7 +27,7 @@ elif [ ! $GITHUB_EVENT_NAME == "release" ]; then
     exit 0
 fi
 
-# Release Actions
+# Release Actions [published]
 action=`echo $EVENT_JSON | jq -r '.action'`
 assets_url=`echo $EVENT_JSON | jq -r '.release.assets_url'`
 draft=`echo $EVENT_JSON | jq -r '.release.draft'`
@@ -39,3 +39,17 @@ id=`echo $EVENT_JSON | jq -r '.release.id'`
 echo "Action: $action, Branch: $branch" 
 echo "Tag: $tag, Draft: $draft, Pre-Release: $prerelease" 
 echo "Assets: $assets_url" 
+
+#git_upload_asset <file>
+function git_upload_asset(){
+    local name=$(basename "$3")
+    local mime=$(file -b "$3")
+    curl -k \
+    	-H "Authorization: token $GITHUB_TOKEN" \
+    	-H "Accept: application/vnd.github.v3.raw+json" \
+    	-H "Content-Type: $mime" \
+    	--data "@$3" \
+    	"$assets_url?name=$name"
+}
+
+git_upload_asset README.md
