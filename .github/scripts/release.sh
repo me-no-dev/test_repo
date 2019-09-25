@@ -1,6 +1,9 @@
 #!/bin/bash
 EVENT_JSON=`cat $GITHUB_EVENT_PATH`
 
+echo $EVENT_JSON
+echo
+
 action=`echo $EVENT_JSON | jq -r '.action'`
 assets_url=`echo $EVENT_JSON | jq -r '.release.assets_url'`
 draft=`echo $EVENT_JSON | jq -r '.release.draft'`
