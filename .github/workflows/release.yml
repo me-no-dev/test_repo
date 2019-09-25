@@ -14,11 +14,11 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build
       run: echo should be building
-    - name: Upload binaries to release
+    - name: Upload files to release
       uses: svenstaro/upload-release-action@v1-release
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: folder1/file1.txt
-        asset_name: mything
+        asset_name: myfile.txt
         tag: ${{ github.ref }}
         overwrite: true
