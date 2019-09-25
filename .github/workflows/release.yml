@@ -10,10 +10,4 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build
-      run: echo should be building
-    - name: Upload files to release
-      uses: me-no-dev/github-action-publish-binaries@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        args: 'folder1/*'
+      run: cat $GITHUB_EVENT_PATH
