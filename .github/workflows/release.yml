@@ -15,10 +15,8 @@ jobs:
     - name: Build
       run: echo should be building
     - name: Upload files to release
-      uses: svenstaro/upload-release-action@master
+      uses: skx/github-action-publish-binaries@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: folder1/file1.txt
-        asset_name: myfile.txt
-        tag: ${{ github.ref }}
-        overwrite: true
+        args: 'folder1/*'
