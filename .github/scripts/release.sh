@@ -40,7 +40,7 @@ echo "Action: $action, Branch: $branch"
 echo "Tag: $tag, Draft: $draft, Pre-Release: $prerelease" 
 echo "Assets: $assets_url" 
 
-apt-get -y install file
+sudo apt-get -y install file
 
 #git_upload_asset <file>
 function git_upload_asset(){
