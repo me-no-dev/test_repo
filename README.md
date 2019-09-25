@@ -1,2 +1,2 @@
 # test_repo
-Just a test repository\nnew line :)nnew line :)
+Just a test repository
