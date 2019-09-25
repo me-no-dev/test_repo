@@ -51,7 +51,7 @@ function git_upload_asset(){
     	-H "Accept: application/vnd.github.v3.raw+json" \
     	-H "Content-Type: $mime" \
     	--data "@$3" \
-    	"$assets_url?name=$name"
+    	"https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$id/assets?name=$name"
 }
 
 git_upload_asset README.md
