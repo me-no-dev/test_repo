@@ -9,7 +9,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Run a script
+    - name: Handle Event
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: bash ./.github/scripts/release.sh
+      run: bash ./.github/scripts/repository_dispatch.sh
