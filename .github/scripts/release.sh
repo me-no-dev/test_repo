@@ -46,12 +46,7 @@ sudo apt-get -y install file
 function git_upload_asset(){
     local name=$(basename "$3")
     local mime=$(file -b "$3")
-    curl -k \
-    	-H "Authorization: token $GITHUB_TOKEN" \
-    	-H "Accept: application/vnd.github.v3.raw+json" \
-    	-H "Content-Type: $mime" \
-    	--data "@$3" \
-    	"https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$id/assets?name=$name"
+    echo curl -k -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw+json" -H "Content-Type: $mime" --data "@$3" "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$id/assets?name=$name"
 }
 
-git_upload_asset README.md
+git_upload_asset ./README.md
