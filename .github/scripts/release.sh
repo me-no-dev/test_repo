@@ -36,17 +36,19 @@ tag=`echo $EVENT_JSON | jq -r '.release.tag_name'`
 branch=`echo $EVENT_JSON | jq -r '.release.target_commitish'`
 id=`echo $EVENT_JSON | jq -r '.release.id'`
 
-echo "Action: $action, Branch: $branch" 
+echo "Action: $action, Branch: $branch, ID: $id" 
 echo "Tag: $tag, Draft: $draft, Pre-Release: $prerelease" 
 echo "Assets: $assets_url" 
 
-sudo apt-get -y install file
+if [ $draft == "true" ]; then
+	echo "It's a draft release. Exiting now..."
+	exit 0
+fi
 
-#git_upload_asset <file>
 function git_upload_asset(){
     local name=$(basename "$1")
     local mime=$(file -b --mime-type "$1")
-    echo curl -k -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw+json" -H "Content-Type: $mime" --data "@$1" "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$id/assets?name=$name"
+    curl -k -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw+json" -H "Content-Type: $mime" --data "@$1" "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$id/assets?name=$name"
 }
 
 git_upload_asset ./README.md
