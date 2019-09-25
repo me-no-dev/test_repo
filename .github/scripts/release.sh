@@ -6,11 +6,9 @@ echo "Event: $GITHUB_EVENT_NAME, Repo: $GITHUB_REPOSITORY, Path: $GITHUB_WORKSPA
 if [ $GITHUB_EVENT_NAME == "repository_dispatch" ]; then
     action=`echo $EVENT_JSON | jq -r '.action'`
     payload=`echo $EVENT_JSON | jq -r '.client_payload'`
-    echo "Action: $action, Payload: payload"
+    echo "Action: $action, Payload: $payload"
     exit 0
 elif [ ! $GITHUB_EVENT_NAME == "release" ]; then
-    echo
-    env
     echo
     echo $EVENT_JSON
     exit 0
