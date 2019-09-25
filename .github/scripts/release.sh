@@ -1,8 +1,11 @@
 #!/bin/bash
 EVENT_JSON=`cat $GITHUB_EVENT_PATH`
 
-echo $EVENT_JSON
-echo
+if [ ! $GITHUB_EVENT_NAME == "release" ]; then
+    env
+    echo $EVENT_JSON
+    exit 0
+fi
 
 action=`echo $EVENT_JSON | jq -r '.action'`
 assets_url=`echo $EVENT_JSON | jq -r '.release.assets_url'`
