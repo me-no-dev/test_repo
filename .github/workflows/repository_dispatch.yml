@@ -1,8 +1,6 @@
 name: Test Event
 
-on:
-  repository_dispatch:
-    types: build
+on: repository_dispatch
 
 jobs:
   run:
