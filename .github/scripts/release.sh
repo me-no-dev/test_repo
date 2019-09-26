@@ -38,7 +38,7 @@ function git_upload_to_pages(){
         message="Creating $message"
     fi
 
-    content=`base64 -i "$src" -o -`
+    content=`base64 -i "$src"`
     data="{\"branch\":\"gh-pages\",\"message\":\"$message\",\"content\":\"$content\"$sha}"
 
     echo "$data" | curl -s -k -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw+json" -X PUT --data @- "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/$path"
