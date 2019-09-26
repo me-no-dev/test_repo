@@ -1,0 +1,17 @@
+name: Test Event 2
+
+on:
+  repository_dispatch:
+  	types: deploy
+
+jobs:
+  run:
+    name: Dispatch Event
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Handle Event
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: bash ./.github/scripts/repository_dispatch.sh
