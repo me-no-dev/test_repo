@@ -2,7 +2,7 @@ name: Test Event 2
 
 on:
   repository_dispatch:
-  	types: deploy
+  	types: docool
 
 jobs:
   run:
