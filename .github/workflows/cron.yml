@@ -1,0 +1,28 @@
+name: Cron Build
+
+on: 
+  schedule:
+#             ┌───────────── minute (0 - 59)
+#             │ ┌───────────── hour (0 - 23)
+#             │ │ ┌───────────── day of the month (1 - 31)
+#             │ │ │   ┌───────────── month (1 - 12 or JAN-DEC)
+#             │ │ │   │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+#             │ │ │   │ │                                   
+#             │ │ │   │ │
+#             │ │ │   │ │
+#             * * *   * *
+    - cron:  '* * */1 * *' #once a day
+
+jobs:
+  run:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build
+      run: bash ./.github/scripts/cron.sh
+    #- name: Upload build artifacts
+    #  uses: actions/upload-artifact@v1
+    #  with:
+    #    name: arduino-libs
+    #    path: dist
