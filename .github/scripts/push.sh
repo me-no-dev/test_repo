@@ -61,16 +61,20 @@ ARDUINO_USR_PATH="$HOME/Arduino"
 ARDUINO_BUILD_DIR="$HOME/build.tmp"
 ARDUINO_CACHE_DIR="$HOME/cache.tmp"
 
-pip install pyserial
+echo "Installing Python Serial"
+pip install pyserial > /dev/null
 
 echo "OS: $OS_NAME.$ARCHIVE_FORMAT"
 
+echo "Downloading arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT to arduino.$ARCHIVE_FORMAT"
 if [ "$OS_IS_LINUX" == "1" ]; then
 	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null
+	echo "Extracting arduino.$ARCHIVE_FORMAT"
 	tar xf "arduino.$ARCHIVE_FORMAT" > /dev/null
 	mv arduino-nightly "$ARDUINO_IDE_PATH"
 else
 	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null
+	echo "Extracting arduino.$ARCHIVE_FORMAT"
 	unzip "arduino.$ARCHIVE_FORMAT" > /dev/null
 	if [ "$OS_IS_MACOS" == "1" ]; then
 		mv "Arduino.app" "$HOME/Arduino.app"
@@ -95,18 +99,24 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino>
 		$2
 }
 
-mkdir -p "$ARDUINO_USR_PATH/hardware/espressif"
-cd "$ARDUINO_USR_PATH/hardware/espressif"
-git clone https://github.com/espressif/arduino-esp32.git esp32
-cd esp32
-git submodule update --init --recursive
+mkdir -p "$ARDUINO_USR_PATH/hardware/espressif" && \
+cd "$ARDUINO_USR_PATH/hardware/espressif" && \
+echo "Installing Arduino Core" && \
+git clone https://github.com/espressif/arduino-esp32.git esp32 > /dev/null && \
+cd esp32 && \
+echo "Updating submodules" && \
+git submodule update --init --recursive > /dev/null && \
 cd tools
 if [ "$OS_IS_WINDOWS" == "1" ]; then
-	pip install requests
+	echo "Installing Python Requests"
+	pip install requests > /dev/null
 fi
+echo "Downloading the tools and the toolchain"
 python get.py > /dev/null
 cd $GITHUB_WORKSPACE
 
 mkdir -p "$ARDUINO_BUILD_DIR"
 mkdir -p "$ARDUINO_CACHE_DIR"
+
+echo "Compiling Sketch"
 build_sketch "espressif:esp32:esp32" "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
