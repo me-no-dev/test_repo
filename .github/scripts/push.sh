@@ -60,11 +60,13 @@ ARDUINO_CACHE_DIR="$HOME/cache.tmp"
 ARDUINO_BUILD_CMD="$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 -hardware \"$ARDUINO_USR_PATH/hardware\" -tools \"$ARDUINO_IDE_PATH/tools-builder\" -built-in-libraries \"$ARDUINO_IDE_PATH/libraries\" -libraries \"$ARDUINO_USR_PATH/libraries\" -fqbn=$PLATFORM_FQBN -warnings=\"all\" -build-cache \"$ARDUINO_CACHE_DIR\" -build-path \"$ARDUINO_BUILD_DIR\" -verbose"
 
 pip install pyserial
-curl "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" --output "arduino.$ARCHIVE_FORMAT"
-if [ -n $OS_IS_LINUX ]; then
-	tar xf arduino.tar.xz
+
+if [ "$OS_IS_LINUX" == "1" ]; then
+	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT"
+	tar xf "arduino.$ARCHIVE_FORMAT"
 else
-	unzip arduino.zip
+	curl "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" --output "arduino.$ARCHIVE_FORMAT"
+	unzip "arduino.$ARCHIVE_FORMAT"
 fi
 mv arduino-nightly "$ARDUINO_IDE_PATH"
 mkdir -p "$ARDUINO_USR_PATH/libraries"
