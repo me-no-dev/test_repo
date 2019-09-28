@@ -15,3 +15,30 @@ if [ $GITHUB_EVENT_NAME == "pull_request" ]; then
     mergeable_state=`echo $EVENT_JSON | jq -r '.pull_request.mergeable_state'`
     echo "Action: $action, Mergeable: $mergeable_state"
 fi
+
+function get_os(){
+  	local OSBITS=`arch`
+  	echo "OSTYPE: '$OSTYPE', ARCH: '$OSBITS'"
+  	if [[ "$OSTYPE" == "linux"* ]]; then
+        if [[ "$OSBITS" == "i686" ]]; then
+        	echo "linux32"
+        elif [[ "$OSBITS" == "x86_64" ]]; then
+        	echo "linux64"
+        elif [[ "$OSBITS" == "armv7l" ]]; then
+        	echo "linux-armel"
+        else
+        	echo "unknown"
+	    	return 1
+        fi
+	elif [[ "$OSTYPE" == "darwin"* ]]; then
+	    echo "macos"
+	elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+	    echo "win32"
+	else
+	    echo "$OSTYPE"
+	    return 1
+	fi
+	return 0
+}
+
+echo "OS: "`get_os`
