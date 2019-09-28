@@ -18,8 +18,8 @@ fi
 
 function get_os(){
   	local OSBITS=`arch`
-  	echo "OSTYPE: '$OSTYPE', ARCH: '$OSBITS'"
   	if [[ "$OSTYPE" == "linux"* ]]; then
+  		export OS_IS_LINUX="1"
         if [[ "$OSBITS" == "i686" ]]; then
         	echo "linux32"
         elif [[ "$OSBITS" == "x86_64" ]]; then
@@ -27,18 +27,24 @@ function get_os(){
         elif [[ "$OSBITS" == "armv7l" ]]; then
         	echo "linux-armel"
         else
-        	echo "unknown"
+        	echo "$OSTYPE-$OSBITS"
 	    	return 1
         fi
 	elif [[ "$OSTYPE" == "darwin"* ]]; then
+		export OS_IS_MACOS="1"
 	    echo "macos"
 	elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+		export OS_IS_WINDOWS="1"
 	    echo "win32"
 	else
-	    echo "$OSTYPE"
+	    echo "$OSTYPE-$OSBITS"
 	    return 1
 	fi
 	return 0
 }
 
 echo "OS: "`get_os`
+
+#OSTYPE: 'linux-gnu', ARCH: 'x86_64' => linux64
+#OSTYPE: 'msys', ARCH: 'x86_64' => win32
+#OSTYPE: 'darwin18', ARCH: 'i386' => macos
