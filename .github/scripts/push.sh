@@ -43,8 +43,35 @@ function get_os(){
 	return 0
 }
 
-echo "OS: "`get_os`
+OS_NAME=`get_os`
+echo "OS: $OS_NAME"
 
 #OSTYPE: 'linux-gnu', ARCH: 'x86_64' => linux64
 #OSTYPE: 'msys', ARCH: 'x86_64' => win32
 #OSTYPE: 'darwin18', ARCH: 'i386' => macos
+
+ARDUINO_IDE_PATH="$HOME/arduino_ide"
+ARDUINO_USR_PATH="$HOME/Arduino"
+ARDUINO_BUILD_DIR="$HOME/build.tmp"
+ARDUINO_CACHE_DIR="$HOME/cache.tmp"
+ARDUINO_BUILD_CMD="$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 -hardware \"$ARDUINO_USR_PATH/hardware\" -tools \"$ARDUINO_IDE_PATH/tools-builder\" -built-in-libraries \"$ARDUINO_IDE_PATH/libraries\" -libraries \"$ARDUINO_USR_PATH/libraries\" -fqbn=$PLATFORM_FQBN -warnings=\"all\" -build-cache \"$ARDUINO_CACHE_DIR\" -build-path \"$ARDUINO_BUILD_DIR\" -verbose"
+
+pip install pyserial
+wget -O arduino.tar.xz "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.tar.xz"
+tar xf arduino.tar.xz
+mv arduino-nightly "$ARDUINO_IDE_PATH"
+mkdir -p "$ARDUINO_USR_PATH/libraries"
+mkdir -p "$ARDUINO_USR_PATH/hardware"
+
+mkdir -p "$ARDUINO_USR_PATH/hardware/espressif"
+cd "$ARDUINO_USR_PATH/hardware/espressif"
+git clone https://github.com/espressif/arduino-esp32.git esp32
+cd esp32
+git submodule update --init --recursive
+cd tools
+python get.py
+PLATFORM_FQBN="espressif:esp32:esp32"
+
+cd $GITHUB_WORKSPACE
+
+$ARDUINO_BUILD_CMD "$ARDUINO_USR_PATH/hardware/espressif/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
