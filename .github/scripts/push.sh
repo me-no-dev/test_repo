@@ -52,16 +52,20 @@ get_os
 #OSTYPE: 'msys', ARCH: 'x86_64' => win32
 #OSTYPE: 'darwin18', ARCH: 'i386' => macos
 
+ARDUINO_USR_PATH="$HOME/Arduino"
+ARDUINO_BUILD_DIR="$HOME/build.tmp"
+ARDUINO_CACHE_DIR="$HOME/cache.tmp"
+
 if [ "$OS_IS_MACOS" == "1" ]; then
 	ARDUINO_IDE_PATH="$HOME/Arduino.app/Contents/Java"
 elif [ "$OS_IS_WINDOWS" == "1" ]; then
 	ARDUINO_IDE_PATH="$HOME\\arduino_ide"
+	ARDUINO_USR_PATH="$HOME\\Arduino"
+	ARDUINO_BUILD_DIR="$HOME\\build.tmp"
+	ARDUINO_CACHE_DIR="$HOME\\cache.tmp"
 else
 	ARDUINO_IDE_PATH="$HOME/arduino_ide"
 fi
-ARDUINO_USR_PATH="$HOME/Arduino"
-ARDUINO_BUILD_DIR="$HOME/build.tmp"
-ARDUINO_CACHE_DIR="$HOME/cache.tmp"
 
 echo "Installing Python Serial"
 pip install pyserial > /dev/null
@@ -99,6 +103,8 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino>
 			-libraries "$ARDUINO_USR_PATH\\libraries" \
 			-build-cache "$ARDUINO_CACHE_DIR" \
 			-build-path "$ARDUINO_BUILD_DIR" \
+			-prefs=runtime.tools.ctags.path="$ARDUINO_IDE_PATH\\tools-builder\\ctags\\5.8-arduino11" \
+			-prefs=runtime.tools.arduino-preprocessor.path="$ARDUINO_IDE_PATH\\tools-builder\\arduino-preprocessor\\0.1.5" \
 			$2
 	else
 		$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 \
