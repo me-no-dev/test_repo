@@ -19,8 +19,8 @@ fi
 function get_os(){
   	local OSBITS=`arch`
   	if [[ "$OSTYPE" == "linux"* ]]; then
-  		export OS_IS_LINUX="1"
-  		export ARCHIVE_FORMAT="tar.xz"
+  		OS_IS_LINUX="1"
+  		ARCHIVE_FORMAT="tar.xz"
         if [[ "$OSBITS" == "i686" ]]; then
         	echo "linux32"
         elif [[ "$OSBITS" == "x86_64" ]]; then
@@ -32,12 +32,12 @@ function get_os(){
 	    	return 1
         fi
 	elif [[ "$OSTYPE" == "darwin"* ]]; then
-		export OS_IS_MACOS="1"
-  		export ARCHIVE_FORMAT="zip"
+		OS_IS_MACOS="1"
+  		ARCHIVE_FORMAT="zip"
 	    echo "macosx"
 	elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
-		export OS_IS_WINDOWS="1"
-  		export ARCHIVE_FORMAT="zip"
+		OS_IS_WINDOWS="1"
+  		ARCHIVE_FORMAT="zip"
 	    echo "windows"
 	else
 	    echo "$OSTYPE-$OSBITS"
@@ -47,7 +47,6 @@ function get_os(){
 }
 
 OS_NAME=`get_os`
-echo "OS: $OS_NAME"
 
 #OSTYPE: 'linux-gnu', ARCH: 'x86_64' => linux64
 #OSTYPE: 'msys', ARCH: 'x86_64' => win32
@@ -60,6 +59,8 @@ ARDUINO_CACHE_DIR="$HOME/cache.tmp"
 ARDUINO_BUILD_CMD="$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 -hardware \"$ARDUINO_USR_PATH/hardware\" -tools \"$ARDUINO_IDE_PATH/tools-builder\" -built-in-libraries \"$ARDUINO_IDE_PATH/libraries\" -libraries \"$ARDUINO_USR_PATH/libraries\" -fqbn=$PLATFORM_FQBN -warnings=\"all\" -build-cache \"$ARDUINO_CACHE_DIR\" -build-path \"$ARDUINO_BUILD_DIR\" -verbose"
 
 pip install pyserial
+
+echo "OS: $OS_NAME.$ARCHIVE_FORMAT"
 
 if [ "$OS_IS_LINUX" == "1" ]; then
 	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT"
