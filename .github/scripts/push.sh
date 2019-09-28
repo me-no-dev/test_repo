@@ -83,7 +83,16 @@ mkdir -p "$ARDUINO_USR_PATH/libraries"
 mkdir -p "$ARDUINO_USR_PATH/hardware"
 
 function build_sketch(){ # build_sketch <fqbn> <path-to-ino>
-	$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 -hardware "$ARDUINO_USR_PATH/hardware" -tools "$ARDUINO_IDE_PATH/tools-builder" -built-in-libraries "$ARDUINO_IDE_PATH/libraries" -libraries "$ARDUINO_USR_PATH/libraries" -fqbn=$1 -warnings="all" -build-cache "$ARDUINO_CACHE_DIR" -build-path "$ARDUINO_BUILD_DIR" -verbose $2
+	$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 \
+		-fqbn=$1 \
+		-warnings="all" \
+		-tools "$ARDUINO_IDE_PATH/tools-builder" \
+		-built-in-libraries "$ARDUINO_IDE_PATH/libraries" \
+		-hardware "$ARDUINO_USR_PATH/hardware" \
+		-libraries "$ARDUINO_USR_PATH/libraries" \
+		-build-cache "$ARDUINO_CACHE_DIR" \
+		-build-path "$ARDUINO_BUILD_DIR" \
+		$2
 }
 
 mkdir -p "$ARDUINO_USR_PATH/hardware/espressif"
