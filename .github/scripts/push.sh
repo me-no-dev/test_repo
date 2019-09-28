@@ -54,6 +54,8 @@ get_os
 
 if [ "$OS_IS_MACOS" == "1" ]; then
 	ARDUINO_IDE_PATH="$HOME/Arduino.app/Contents/Java"
+elif [ "$OS_IS_WINDOWS" == "1" ]; then
+	ARDUINO_IDE_PATH="$HOME\\arduino_ide"
 else
 	ARDUINO_IDE_PATH="$HOME/arduino_ide"
 fi
@@ -87,16 +89,29 @@ mkdir -p "$ARDUINO_USR_PATH/libraries"
 mkdir -p "$ARDUINO_USR_PATH/hardware"
 
 function build_sketch(){ # build_sketch <fqbn> <path-to-ino>
-	$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 \
-		-fqbn=$1 \
-		-warnings="all" \
-		-tools "$ARDUINO_IDE_PATH/tools-builder" \
-		-built-in-libraries "$ARDUINO_IDE_PATH/libraries" \
-		-hardware "$ARDUINO_USR_PATH/hardware" \
-		-libraries "$ARDUINO_USR_PATH/libraries" \
-		-build-cache "$ARDUINO_CACHE_DIR" \
-		-build-path "$ARDUINO_BUILD_DIR" \
-		$2
+	if [ "$OS_IS_WINDOWS" == "1" ]; then
+		$ARDUINO_IDE_PATH\\arduino-builder.exe -compile -logger=human -core-api-version=10810 \
+			-fqbn=$1 \
+			-warnings="all" \
+			-tools "$ARDUINO_IDE_PATH\\tools-builder" \
+			-built-in-libraries "$ARDUINO_IDE_PATH\\libraries" \
+			-hardware "$ARDUINO_USR_PATH\\hardware" \
+			-libraries "$ARDUINO_USR_PATH\\libraries" \
+			-build-cache "$ARDUINO_CACHE_DIR" \
+			-build-path "$ARDUINO_BUILD_DIR" \
+			$2
+	else
+		$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 \
+			-fqbn=$1 \
+			-warnings="all" \
+			-tools "$ARDUINO_IDE_PATH/tools-builder" \
+			-built-in-libraries "$ARDUINO_IDE_PATH/libraries" \
+			-hardware "$ARDUINO_USR_PATH/hardware" \
+			-libraries "$ARDUINO_USR_PATH/libraries" \
+			-build-cache "$ARDUINO_CACHE_DIR" \
+			-build-path "$ARDUINO_BUILD_DIR" \
+			$2
+	fi
 }
 
 mkdir -p "$ARDUINO_USR_PATH/hardware/espressif" && \
