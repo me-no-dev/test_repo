@@ -60,7 +60,6 @@ fi
 ARDUINO_USR_PATH="$HOME/Arduino"
 ARDUINO_BUILD_DIR="$HOME/build.tmp"
 ARDUINO_CACHE_DIR="$HOME/cache.tmp"
-ARDUINO_BUILD_CMD="$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 -hardware \"$ARDUINO_USR_PATH/hardware\" -tools \"$ARDUINO_IDE_PATH/tools-builder\" -built-in-libraries \"$ARDUINO_IDE_PATH/libraries\" -libraries \"$ARDUINO_USR_PATH/libraries\" -fqbn=$PLATFORM_FQBN -warnings=\"all\" -build-cache \"$ARDUINO_CACHE_DIR\" -build-path \"$ARDUINO_BUILD_DIR\" -verbose"
 
 pip install pyserial
 
@@ -94,8 +93,11 @@ if [ "$OS_IS_WINDOWS" == "1" ]; then
 else
 	python get.py
 fi
-PLATFORM_FQBN="espressif:esp32:esp32"
 
 cd $GITHUB_WORKSPACE
+
+PLATFORM_FQBN="espressif:esp32:esp32"
+
+ARDUINO_BUILD_CMD="$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 -hardware \"$ARDUINO_USR_PATH/hardware\" -tools \"$ARDUINO_IDE_PATH/tools-builder\" -built-in-libraries \"$ARDUINO_IDE_PATH/libraries\" -libraries \"$ARDUINO_USR_PATH/libraries\" -fqbn=$PLATFORM_FQBN -warnings=\"all\" -build-cache \"$ARDUINO_CACHE_DIR\" -build-path \"$ARDUINO_BUILD_DIR\" -verbose"
 
 $ARDUINO_BUILD_CMD "$ARDUINO_USR_PATH/hardware/espressif/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
