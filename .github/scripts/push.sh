@@ -101,11 +101,7 @@ git clone https://github.com/espressif/arduino-esp32.git esp32
 cd esp32
 git submodule update --init --recursive
 cd tools
-if [ "$OS_IS_WINDOWS" == "1" ]; then
-	./get.exe > /dev/null
-else
-	python get.py > /dev/null
-fi
+python get.py > /dev/null
 cd $GITHUB_WORKSPACE
 
 mkdir -p "$ARDUINO_BUILD_DIR"
