@@ -82,6 +82,10 @@ fi
 mkdir -p "$ARDUINO_USR_PATH/libraries"
 mkdir -p "$ARDUINO_USR_PATH/hardware"
 
+function build_sketch(){ # build_sketch <fqbn> <path-to-ino>
+	$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 -hardware "$ARDUINO_USR_PATH/hardware" -tools "$ARDUINO_IDE_PATH/tools-builder" -built-in-libraries "$ARDUINO_IDE_PATH/libraries" -libraries "$ARDUINO_USR_PATH/libraries" -fqbn=$1 -warnings="all" -build-cache "$ARDUINO_CACHE_DIR" -build-path "$ARDUINO_BUILD_DIR" -verbose $2
+}
+
 mkdir -p "$ARDUINO_USR_PATH/hardware/espressif"
 cd "$ARDUINO_USR_PATH/hardware/espressif"
 git clone https://github.com/espressif/arduino-esp32.git esp32
@@ -93,11 +97,8 @@ if [ "$OS_IS_WINDOWS" == "1" ]; then
 else
 	python get.py
 fi
-
 cd $GITHUB_WORKSPACE
 
-PLATFORM_FQBN="espressif:esp32:esp32"
-
-ARDUINO_BUILD_CMD="$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 -hardware \"$ARDUINO_USR_PATH/hardware\" -tools \"$ARDUINO_IDE_PATH/tools-builder\" -built-in-libraries \"$ARDUINO_IDE_PATH/libraries\" -libraries \"$ARDUINO_USR_PATH/libraries\" -fqbn=$PLATFORM_FQBN -warnings=\"all\" -build-cache \"$ARDUINO_CACHE_DIR\" -build-path \"$ARDUINO_BUILD_DIR\" -verbose"
-
-$ARDUINO_BUILD_CMD "$ARDUINO_USR_PATH/hardware/espressif/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
+mkdir -p "$ARDUINO_BUILD_DIR"
+mkdir -p "$ARDUINO_CACHE_DIR"
+build_sketch "espressif:esp32:esp32" "$ARDUINO_USR_PATH/hardware/espressif/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
