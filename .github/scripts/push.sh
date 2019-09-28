@@ -93,7 +93,7 @@ cd esp32
 git submodule update --init --recursive
 cd tools
 if [ "$OS_IS_WINDOWS" == "1" ]; then
-	get.exe > /dev/null
+	./get.exe > /dev/null
 else
 	python get.py > /dev/null
 fi
