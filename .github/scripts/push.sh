@@ -52,7 +52,11 @@ get_os
 #OSTYPE: 'msys', ARCH: 'x86_64' => win32
 #OSTYPE: 'darwin18', ARCH: 'i386' => macos
 
-ARDUINO_IDE_PATH="$HOME/arduino_ide"
+if [ "$OS_IS_MACOS" == "1" ]; then
+	ARDUINO_IDE_PATH="$HOME/Arduino.app/Contents/Java"
+else
+	ARDUINO_IDE_PATH="$HOME/arduino_ide"
+fi
 ARDUINO_USR_PATH="$HOME/Arduino"
 ARDUINO_BUILD_DIR="$HOME/build.tmp"
 ARDUINO_CACHE_DIR="$HOME/cache.tmp"
@@ -65,11 +69,17 @@ echo "OS: $OS_NAME.$ARCHIVE_FORMAT"
 if [ "$OS_IS_LINUX" == "1" ]; then
 	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT"
 	tar xf "arduino.$ARCHIVE_FORMAT"
+	mv arduino-nightly "$ARDUINO_IDE_PATH"
 else
-	curl "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" --output "arduino.$ARCHIVE_FORMAT"
+	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT"
 	unzip "arduino.$ARCHIVE_FORMAT"
+	if [ "$OS_IS_MACOS" == "1" ]; then
+		mv "Arduino.app" "$HOME/Arduino.app"
+	else
+		mv arduino-nightly "$ARDUINO_IDE_PATH"
+	fi
 fi
-mv arduino-nightly "$ARDUINO_IDE_PATH"
+
 mkdir -p "$ARDUINO_USR_PATH/libraries"
 mkdir -p "$ARDUINO_USR_PATH/hardware"
 
@@ -79,7 +89,11 @@ git clone https://github.com/espressif/arduino-esp32.git esp32
 cd esp32
 git submodule update --init --recursive
 cd tools
-python get.py
+if [ "$OS_IS_WINDOWS" == "1" ]; then
+	get.exe
+else
+	python get.py
+fi
 PLATFORM_FQBN="espressif:esp32:esp32"
 
 cd $GITHUB_WORKSPACE
