@@ -20,7 +20,7 @@ fi
 #OSTYPE: 'msys', ARCH: 'x86_64' => win32
 #OSTYPE: 'darwin18', ARCH: 'i386' => macos
 
-local OSBITS=`arch`
+OSBITS=`arch`
 if [[ "$OSTYPE" == "linux"* ]]; then
 	OS_IS_LINUX="1"
 	ARCHIVE_FORMAT="tar.xz"
