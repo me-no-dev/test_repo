@@ -66,12 +66,12 @@ pip install pyserial
 echo "OS: $OS_NAME.$ARCHIVE_FORMAT"
 
 if [ "$OS_IS_LINUX" == "1" ]; then
-	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT"
-	tar xf "arduino.$ARCHIVE_FORMAT"
+	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null
+	tar xf "arduino.$ARCHIVE_FORMAT" > /dev/null
 	mv arduino-nightly "$ARDUINO_IDE_PATH"
 else
-	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT"
-	unzip "arduino.$ARCHIVE_FORMAT"
+	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null
+	unzip "arduino.$ARCHIVE_FORMAT" > /dev/null
 	if [ "$OS_IS_MACOS" == "1" ]; then
 		mv "Arduino.app" "$HOME/Arduino.app"
 	else
@@ -93,12 +93,12 @@ cd esp32
 git submodule update --init --recursive
 cd tools
 if [ "$OS_IS_WINDOWS" == "1" ]; then
-	get.exe
+	get.exe > /dev/null
 else
-	python get.py
+	python get.py > /dev/null
 fi
 cd $GITHUB_WORKSPACE
 
 mkdir -p "$ARDUINO_BUILD_DIR"
 mkdir -p "$ARDUINO_CACHE_DIR"
-build_sketch "espressif:esp32:esp32" "$ARDUINO_USR_PATH/hardware/espressif/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
+build_sketch "espressif:esp32:esp32" "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
