@@ -22,31 +22,31 @@ function get_os(){
   		OS_IS_LINUX="1"
   		ARCHIVE_FORMAT="tar.xz"
         if [[ "$OSBITS" == "i686" ]]; then
-        	echo "linux32"
+        	OS_NAME="linux32"
         elif [[ "$OSBITS" == "x86_64" ]]; then
-        	echo "linux64"
+        	OS_NAME="linux64"
         elif [[ "$OSBITS" == "armv7l" ]]; then
-        	echo "linuxarm"
+        	OS_NAME="linuxarm"
         else
-        	echo "$OSTYPE-$OSBITS"
+        	OS_NAME="$OSTYPE-$OSBITS"
 	    	return 1
         fi
 	elif [[ "$OSTYPE" == "darwin"* ]]; then
 		OS_IS_MACOS="1"
   		ARCHIVE_FORMAT="zip"
-	    echo "macosx"
+	    OS_NAME="macosx"
 	elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
 		OS_IS_WINDOWS="1"
   		ARCHIVE_FORMAT="zip"
-	    echo "windows"
+	    OS_NAME="windows"
 	else
-	    echo "$OSTYPE-$OSBITS"
+	    OS_NAME="$OSTYPE-$OSBITS"
 	    return 1
 	fi
 	return 0
 }
 
-OS_NAME=`get_os`
+get_os
 
 #OSTYPE: 'linux-gnu', ARCH: 'x86_64' => linux64
 #OSTYPE: 'msys', ARCH: 'x86_64' => win32
