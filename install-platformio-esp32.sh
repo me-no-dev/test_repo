@@ -10,15 +10,15 @@ if [ $? -ne 0 ]; then echo "ERROR: Install failed"; exit 1; fi
 
 echo "Installing Platform ESP32..."
 python -m platformio platform install https://github.com/platformio/platform-espressif32.git#feature/stage > /dev/null 2>&1 && \
-sed -i 's/https:\/\/github\.com\/espressif\/arduino-esp32\.git/*/' ~/.platformio/platforms/espressif32/platform.json
+sed -i 's/https:\/\/github\.com\/espressif\/arduino-esp32\.git/*/' "$HOME/.platformio/platforms/espressif32/platform.json"
 if [ $? -ne 0 ]; then echo "ERROR: Install failed"; exit 1; fi
 
 if [ "$GITHUB_REPOSITORY" == "espressif/arduino-esp32" ];  then
 	echo "Linking Core..." && \
-	ln -s $GITHUB_WORKSPACE ~/.platformio/packages/framework-arduinoespressif32
+	ln -s $GITHUB_WORKSPACE "$HOME/.platformio/packages/framework-arduinoespressif32"
 else
 	echo "Cloning Core Repository..." && \
-	git clone https://github.com/espressif/arduino-esp32.git ~/.platformio/packages/framework-arduinoespressif32 > /dev/null 2>&1
+	git clone https://github.com/espressif/arduino-esp32.git "$HOME/.platformio/packages/framework-arduinoespressif32" > /dev/null 2>&1
 	if [ $? -ne 0 ]; then echo "ERROR: GIT clone failed"; exit 1; fi
 fi
 
@@ -36,4 +36,4 @@ function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino> [extra-opt
 	python -m platformio ci  --board "$board" "$sketch_dir" $xtra_opts
 }
 
-build_pio_sketch "esp32dev" "--project-option=\"board_build.partitions = huge_app.csv\""
+build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino" "--project-option=\"board_build.partitions = huge_app.csv\""
