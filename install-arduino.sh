@@ -49,19 +49,24 @@ echo "Installing Arduino IDE on $OS_NAME..."
 echo "Downloading 'arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT' to 'arduino.$ARCHIVE_FORMAT'..."
 if [ "$OS_IS_LINUX" == "1" ]; then
 	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
+	if [ $? -ne 0 ]; then echo "ERROR: Download failed"; exit 1; fi
 	echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
 	tar xf "arduino.$ARCHIVE_FORMAT" > /dev/null
+	if [ $? -ne 0 ]; then exit 1; fi
 	mv arduino-nightly "$ARDUINO_IDE_PATH"
 else
 	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
+	if [ $? -ne 0 ]; then echo "ERROR: Download failed"; exit 1; fi
 	echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
 	unzip "arduino.$ARCHIVE_FORMAT" > /dev/null
+	if [ $? -ne 0 ]; then exit 1; fi
 	if [ "$OS_IS_MACOS" == "1" ]; then
 		mv "Arduino.app" "$HOME/Arduino.app"
 	else
 		mv arduino-nightly "$ARDUINO_IDE_PATH"
 	fi
 fi
+if [ $? -ne 0 ]; then exit 1; fi
 rm -rf "arduino.$ARCHIVE_FORMAT"
 
 mkdir -p "$ARDUINO_USR_PATH/libraries"
@@ -78,6 +83,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 		win_opts="-prefs=runtime.tools.ctags.path=$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version -prefs=runtime.tools.arduino-preprocessor.path=$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version"
 	fi
 
+	echo ""
 	echo "Compiling '"$(basename "$sketch")"'..."
 	mkdir -p "$ARDUINO_BUILD_DIR"
 	mkdir -p "$ARDUINO_CACHE_DIR"
@@ -93,7 +99,6 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 		-build-cache "$ARDUINO_CACHE_DIR" \
 		-build-path "$ARDUINO_BUILD_DIR" \
 		$win_opts $xtra_opts "$sketch"
-	echo ""
 }
 
 echo "Arduino IDE Installed in '$ARDUINO_IDE_PATH'"
