@@ -21,8 +21,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: bash ./.github/scripts/push.sh
-    - name: Echo Env
-      run: env
     #- name: Upload build artifacts
     #  uses: actions/upload-artifact@v1
     #  with:
