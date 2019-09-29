@@ -44,20 +44,17 @@ else
 	export ARDUINO_IDE_PATH="$HOME/arduino_ide"
 fi
 
-echo "Installing Python Serial"
-pip install pyserial > /dev/null
-
 echo "OS: $OS_NAME.$ARCHIVE_FORMAT"
 
-echo "Downloading arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT to arduino.$ARCHIVE_FORMAT"
+echo "Downloading 'arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT' to 'arduino.$ARCHIVE_FORMAT'..."
 if [ "$OS_IS_LINUX" == "1" ]; then
 	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null
-	echo "Extracting arduino.$ARCHIVE_FORMAT"
+	echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
 	tar xf "arduino.$ARCHIVE_FORMAT" > /dev/null
 	mv arduino-nightly "$ARDUINO_IDE_PATH"
 else
 	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null
-	echo "Extracting arduino.$ARCHIVE_FORMAT"
+	echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
 	unzip "arduino.$ARCHIVE_FORMAT" > /dev/null
 	if [ "$OS_IS_MACOS" == "1" ]; then
 		mv "Arduino.app" "$HOME/Arduino.app"
@@ -78,7 +75,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 	if [ "$OS_IS_WINDOWS" == "1" ]; then
 		local ctags_version=`ls "$ARDUINO_IDE_PATH/tools-builder/ctags/"`
 		local preprocessor_version=`ls "$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/"`
-		win_opts="-prefs=runtime.tools.ctags.path=\"$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version\" -prefs=runtime.tools.arduino-preprocessor.path=\"$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version\""
+		win_opts=-prefs=runtime.tools.ctags.path="$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version" -prefs=runtime.tools.arduino-preprocessor.path="$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version"
 	fi
 
 	mkdir -p "$ARDUINO_BUILD_DIR"

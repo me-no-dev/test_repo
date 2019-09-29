@@ -9,6 +9,8 @@ git clone https://github.com/espressif/arduino-esp32.git esp32 > /dev/null && \
 cd esp32 && \
 echo "Updating submodules..." && \
 git submodule update --init --recursive > /dev/null && \
+echo "Installing Python Serial..." && \
+pip install pyserial > /dev/null
 cd tools
 if [ "$OS_IS_WINDOWS" == "1" ]; then
 	echo "Installing Python Requests..."
