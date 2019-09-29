@@ -1,11 +1,15 @@
 #!/bin/bash
 
+echo "Installing Python Wheel..."
+pip install wheel > /dev/null 2>&1
+if [ $? -ne 0 ]; then echo "ERROR: Install failed"; exit 1; fi
+
 echo "Installing PlatformIO..."
-pip install -U https://github.com/platformio/platformio/archive/develop.zip
+pip install -U https://github.com/platformio/platformio/archive/develop.zip > /dev/null 2>&1
 if [ $? -ne 0 ]; then echo "ERROR: Install failed"; exit 1; fi
 
 echo "Installing Platform ESP32..."
-python -m platformio platform install https://github.com/platformio/platform-espressif32.git#feature/stage && \
+python -m platformio platform install https://github.com/platformio/platform-espressif32.git#feature/stage > /dev/null 2>&1 && \
 sed -i 's/https:\/\/github\.com\/espressif\/arduino-esp32\.git/*/' ~/.platformio/platforms/espressif32/platform.json
 if [ $? -ne 0 ]; then echo "ERROR: Install failed"; exit 1; fi
 
