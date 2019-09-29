@@ -38,7 +38,7 @@ function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino> [extra-opt
 	local board="$1"
 	local sketch="$2"
 	local xtra_opts="$3"
-	local sketch_dir=$(basename $(dirname "$sketch"))
+	local sketch_dir=$(dirname "$sketch")
 	echo ""
 	echo "Compiling '"$(basename "$sketch")"'..."
 	python -m platformio ci  --board "$board" "$sketch_dir" $xtra_opts
