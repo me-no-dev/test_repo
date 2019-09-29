@@ -75,7 +75,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 	if [ "$OS_IS_WINDOWS" == "1" ]; then
 		local ctags_version=`ls "$ARDUINO_IDE_PATH/tools-builder/ctags/"`
 		local preprocessor_version=`ls "$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/"`
-		win_opts="-prefs=runtime.tools.ctags.path='$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version' -prefs=runtime.tools.arduino-preprocessor.path='$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version'"
+		win_opts="-prefs=runtime.tools.ctags.path=$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version -prefs=runtime.tools.arduino-preprocessor.path=$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version"
 	fi
 
 	mkdir -p "$ARDUINO_BUILD_DIR"
@@ -91,7 +91,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 		-libraries "$ARDUINO_USR_PATH/libraries" \
 		-build-cache "$ARDUINO_CACHE_DIR" \
 		-build-path "$ARDUINO_BUILD_DIR" \
-		$win_opts $xtra_opts $sketch
+		"$win_opts" $xtra_opts "$sketch"
 }
 
 echo "Arduino IDE Installed in '$ARDUINO_IDE_PATH'"
