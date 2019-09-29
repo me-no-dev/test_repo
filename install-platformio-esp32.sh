@@ -42,6 +42,7 @@ function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino> [extra-opt
 	echo ""
 	echo "Compiling '"$(basename "$sketch")"'..."
 	python -m platformio ci  --board "$board" "$sketch_dir" $xtra_opts
+	if [ $? -ne 0 ]; then echo "ERROR: Build failed"; exit 1; fi
 }
 
-build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino" --project-option="board_build.partitions = huge_app.csv"
+build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino" --project-option="board_build.partitions = huge_app.csv"
