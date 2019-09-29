@@ -92,7 +92,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 	mkdir -p "$ARDUINO_CACHE_DIR"
 	$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 \
 		-fqbn=$fqbn \
-		-warnings="none" \
+		-warnings="all" \
 		-tools "$ARDUINO_IDE_PATH/tools-builder" \
 		-tools "$ARDUINO_IDE_PATH/tools" \
 		-built-in-libraries "$ARDUINO_IDE_PATH/libraries" \
