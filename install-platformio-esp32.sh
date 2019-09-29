@@ -30,18 +30,18 @@ else
 	if [ $? -ne 0 ]; then echo "ERROR: GIT clone failed"; exit 1; fi
 fi
 
-echo "PlatformIO fir ESP32 has been installed"
+echo "PlatformIO for ESP32 has been installed"
 echo ""
 
 
 function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino> [extra-options]
 	local board="$1"
 	local sketch="$2"
-	local xtra_opts="$3"
+	local xtra_opts=$3
 	local sketch_dir=$(dirname "$sketch")
 	echo ""
 	echo "Compiling '"$(basename "$sketch")"'..."
 	python -m platformio ci  --board "$board" "$sketch_dir" $xtra_opts
 }
 
-build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino" #"--project-option=\"board_build.partitions = huge_app.csv\""
+build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino" --project-option="board_build.partitions = huge_app.csv"
