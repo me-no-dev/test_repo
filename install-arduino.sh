@@ -48,12 +48,12 @@ echo "OS: $OS_NAME.$ARCHIVE_FORMAT"
 
 echo "Downloading 'arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT' to 'arduino.$ARCHIVE_FORMAT'..."
 if [ "$OS_IS_LINUX" == "1" ]; then
-	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null
+	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
 	echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
 	tar xf "arduino.$ARCHIVE_FORMAT" > /dev/null
 	mv arduino-nightly "$ARDUINO_IDE_PATH"
 else
-	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null
+	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
 	echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
 	unzip "arduino.$ARCHIVE_FORMAT" > /dev/null
 	if [ "$OS_IS_MACOS" == "1" ]; then

@@ -5,10 +5,10 @@ echo "Installing ESP32 Arduino in '$ARDUINO_USR_PATH/hardware/espressif'..."
 mkdir -p "$ARDUINO_USR_PATH/hardware/espressif" && \
 cd "$ARDUINO_USR_PATH/hardware/espressif" && \
 echo "Installing Core..." && \
-git clone https://github.com/espressif/arduino-esp32.git esp32 > /dev/null && \
+git clone https://github.com/espressif/arduino-esp32.git esp32 > /dev/null 2>&1 && \
 cd esp32 && \
 echo "Updating submodules..." && \
-git submodule update --init --recursive > /dev/null && \
+git submodule update --init --recursive > /dev/null 2>&1 && \
 echo "Installing Python Serial..." && \
 pip install pyserial > /dev/null
 cd tools
