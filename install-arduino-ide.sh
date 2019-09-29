@@ -34,40 +34,43 @@ else
 fi
 export OS_NAME
 
-export ARDUINO_USR_PATH="$HOME/Arduino"
-ARDUINO_BUILD_DIR="$HOME/build.tmp"
-ARDUINO_CACHE_DIR="$HOME/cache.tmp"
+ARDUINO_BUILD_DIR="$HOME/.arduino/build.tmp"
+ARDUINO_CACHE_DIR="$HOME/.arduino/cache.tmp"
 
 if [ "$OS_IS_MACOS" == "1" ]; then
-	export ARDUINO_IDE_PATH="$HOME/Arduino.app/Contents/Java"
+	export ARDUINO_IDE_PATH="/Applications/Arduino.app/Contents/Java"
+	export ARDUINO_USR_PATH="$HOME/Documents/Arduino"
 else
 	export ARDUINO_IDE_PATH="$HOME/arduino_ide"
+	export ARDUINO_USR_PATH="$HOME/Arduino"
 fi
 
 echo "Installing Arduino IDE on $OS_NAME..."
 
-echo "Downloading 'arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT' to 'arduino.$ARCHIVE_FORMAT'..."
-if [ "$OS_IS_LINUX" == "1" ]; then
-	wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
-	if [ $? -ne 0 ]; then echo "ERROR: Download failed"; exit 1; fi
-	echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
-	tar xf "arduino.$ARCHIVE_FORMAT" > /dev/null
-	if [ $? -ne 0 ]; then exit 1; fi
-	mv arduino-nightly "$ARDUINO_IDE_PATH"
-else
-	curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
-	if [ $? -ne 0 ]; then echo "ERROR: Download failed"; exit 1; fi
-	echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
-	unzip "arduino.$ARCHIVE_FORMAT" > /dev/null
-	if [ $? -ne 0 ]; then exit 1; fi
-	if [ "$OS_IS_MACOS" == "1" ]; then
-		mv "Arduino.app" "$HOME/Arduino.app"
-	else
+if [ ! -d "$ARDUINO_IDE_PATH" ]; then
+	echo "Downloading 'arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT' to 'arduino.$ARCHIVE_FORMAT'..."
+	if [ "$OS_IS_LINUX" == "1" ]; then
+		wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
+		if [ $? -ne 0 ]; then echo "ERROR: Download failed"; exit 1; fi
+		echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
+		tar xf "arduino.$ARCHIVE_FORMAT" > /dev/null
+		if [ $? -ne 0 ]; then exit 1; fi
 		mv arduino-nightly "$ARDUINO_IDE_PATH"
+	else
+		curl -o "arduino.$ARCHIVE_FORMAT" -L "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
+		if [ $? -ne 0 ]; then echo "ERROR: Download failed"; exit 1; fi
+		echo "Extracting 'arduino.$ARCHIVE_FORMAT'..."
+		unzip "arduino.$ARCHIVE_FORMAT" > /dev/null
+		if [ $? -ne 0 ]; then exit 1; fi
+		if [ "$OS_IS_MACOS" == "1" ]; then
+			mv "Arduino.app" "$HOME/Arduino.app"
+		else
+			mv arduino-nightly "$ARDUINO_IDE_PATH"
+		fi
 	fi
+	if [ $? -ne 0 ]; then exit 1; fi
+	rm -rf "arduino.$ARCHIVE_FORMAT"
 fi
-if [ $? -ne 0 ]; then exit 1; fi
-rm -rf "arduino.$ARCHIVE_FORMAT"
 
 mkdir -p "$ARDUINO_USR_PATH/libraries"
 mkdir -p "$ARDUINO_USR_PATH/hardware"
