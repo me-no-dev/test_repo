@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "Installing ESP32 Arduino in '$ARDUINO_USR_PATH/hardware/espressif'..."
+echo "Installing ESP32 Arduino Core in '$ARDUINO_USR_PATH/hardware/espressif'..."
 
 mkdir -p "$ARDUINO_USR_PATH/hardware/espressif" && \
 cd "$ARDUINO_USR_PATH/hardware/espressif" && \
-echo "Installing Core..." && \
+echo "Cloning Core Repository..." && \
 git clone https://github.com/espressif/arduino-esp32.git esp32 > /dev/null 2>&1 && \
 cd esp32 && \
 echo "Updating submodules..." && \

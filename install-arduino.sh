@@ -78,7 +78,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 		win_opts="-prefs=runtime.tools.ctags.path=$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version -prefs=runtime.tools.arduino-preprocessor.path=$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version"
 	fi
 
-	echo "Compiling '"$(basename "$sketch")"' as '$fqbn'..."
+	echo "Compiling '"$(basename "$sketch")"'..."
 	mkdir -p "$ARDUINO_BUILD_DIR"
 	mkdir -p "$ARDUINO_CACHE_DIR"
 	$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 \
