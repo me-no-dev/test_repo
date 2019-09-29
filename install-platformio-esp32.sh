@@ -43,4 +43,100 @@ function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino> [extra-opt
 	python -m platformio ci  --board "$board" "$sketch_dir" --project-option="board_build.partitions = huge_app.csv"
 }
 
-build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
+function count_sketches() # count_sketches <examples-path>
+{
+	local examples="$1"
+    local sketches=$(find $examples -name *.ino)
+    local sketchnum=0
+    rm -rf sketches.txt
+    for sketch in $sketches; do
+        local sketchdir=$(dirname $sketch)
+        local sketchdirname=$(basename $sketchdir)
+        local sketchname=$(basename $sketch)
+        if [[ "${sketchdirname}.ino" != "$sketchname" ]]; then
+            continue
+        fi;
+        if [[ -f "$sketchdir/.test.skip" ]]; then
+            continue
+        fi
+        echo $sketch >> sketches.txt
+        sketchnum=$(($sketchnum + 1))
+    done
+    return $sketchnum
+}
+
+function build_pio_sketches() # build_pio_sketches <examples-path> <board> <chunk> <total-chunks>
+{
+    local examples=$1
+    local board=$2
+    local chunk_idex=$3
+    local chunks_num=$4
+    local xtra_opts=$5
+
+	if [ "$chunks_num" -le 0 ]; then
+		echo "ERROR: Chunks count must be positive number"
+		return 1
+	fi
+	if [ "$chunk_idex" -ge "$chunks_num" ]; then
+		echo "ERROR: Chunk index must be less than chunks count"
+		return 1
+	fi
+
+    count_sketches "$examples"
+    local sketchcount=$?
+    local sketches=$(cat sketches.txt)
+
+    local chunk_size=$(( $sketchcount / $chunks_num ))
+    local all_chunks=$(( $chunks_num * $chunk_size ))
+    if [ "$all_chunks" -lt "$sketchcount" ]; then
+    	chunk_size=$(( $chunk_size + 1 ))
+    fi
+
+    local start_index=$(( $chunk_idex * $chunk_size ))
+    if [ "$sketchcount" -le "$start_index" ]; then
+    	echo "Skipping job"
+    	return 0
+    fi
+
+    local end_index=$(( $(( $chunk_idex + 1 )) * $chunk_size ))
+    if [ "$end_index" -gt "$sketchcount" ]; then
+    	end_index=$sketchcount
+    fi
+
+    local start_num=$(( $start_index + 1 ))
+    echo "Found $sketchcount Sketches";
+    echo "Chunk Count : $chunks_num"
+    echo "Chunk Size  : $chunk_size"
+    echo "Start Sketch: $start_num"
+    echo "End Sketch  : $end_index"
+
+    local sketchnum=0
+    for sketch in $sketches; do
+        local sketchdir=$(dirname $sketch)
+        local sketchdirname=$(basename $sketchdir)
+        local sketchname=$(basename $sketch)
+        if [[ "${sketchdirname}.ino" != "$sketchname" ]]; then
+            #echo "Skipping $sketch, beacause it is not the main sketch file";
+            continue
+        fi;
+        if [[ -f "$sketchdir/.test.skip" ]]; then
+            #echo "Skipping $sketch marked";
+            continue
+        fi
+        sketchnum=$(($sketchnum + 1))
+        if [ "$sketchnum" -le "$start_index" ]; then
+        	#echo "Skipping $sketch index low"
+        	continue
+        fi
+        if [ "$sketchnum" -gt "$end_index" ]; then
+        	#echo "Skipping $sketch index high"
+        	continue
+        fi
+        build_pio_sketch "$board" "$sketch"
+        local result=$?
+        if [ $result -ne 0 ]; then
+            return $result
+        fi
+    done
+    return 0
+}

@@ -30,5 +30,7 @@ fi
 #build_sketches "$ARDUINO_USR_PATH/hardware/esp8266com/esp8266/libraries" "esp8266com:esp8266:generic:eesz=4M1M,ip=lm2f" "$CHUNK_INDEX" "$CHUNKS_CNT"
 
 source "$GITHUB_WORKSPACE/install-platformio-esp32.sh"
+#build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
+build_pio_sketches "$HOME/.platformio/packages/framework-arduinoespressif32/libraries" "esp32dev" "$CHUNK_INDEX" "$CHUNKS_CNT"
 
 if [ $? -ne 0 ]; then exit 1; fi
