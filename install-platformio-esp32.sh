@@ -9,9 +9,17 @@ pip install -U https://github.com/platformio/platformio/archive/develop.zip > /d
 if [ $? -ne 0 ]; then echo "ERROR: Install failed"; exit 1; fi
 
 echo "Installing Platform ESP32..."
-python -m platformio platform install https://github.com/platformio/platform-espressif32.git#feature/stage > /dev/null 2>&1 && \
-sed -i 's/https:\/\/github\.com\/espressif\/arduino-esp32\.git/*/' "$HOME/.platformio/platforms/espressif32/platform.json"
+python -m platformio platform install https://github.com/platformio/platform-espressif32.git#feature/stage > /dev/null 2>&1
 if [ $? -ne 0 ]; then echo "ERROR: Install failed"; exit 1; fi
+
+echo "Replacing the framework version..."
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	sed 's/https:\/\/github\.com\/espressif\/arduino-esp32\.git/*/' "$HOME/.platformio/platforms/espressif32/platform.json" "platform.json" && \
+	mv -f "platform.json" "$HOME/.platformio/platforms/espressif32/platform.json"
+else
+	sed -i 's/https:\/\/github\.com\/espressif\/arduino-esp32\.git/*/' "$HOME/.platformio/platforms/espressif32/platform.json"
+fi
+if [ $? -ne 0 ]; then echo "ERROR: Replace failed"; exit 1; fi
 
 if [ "$GITHUB_REPOSITORY" == "espressif/arduino-esp32" ];  then
 	echo "Linking Core..." && \
