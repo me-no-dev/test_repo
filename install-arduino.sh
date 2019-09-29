@@ -44,7 +44,7 @@ else
 	export ARDUINO_IDE_PATH="$HOME/arduino_ide"
 fi
 
-echo "OS: $OS_NAME.$ARCHIVE_FORMAT"
+echo "Installing Arduino IDE on $OS_NAME..."
 
 echo "Downloading 'arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT' to 'arduino.$ARCHIVE_FORMAT'..."
 if [ "$OS_IS_LINUX" == "1" ]; then
@@ -78,6 +78,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 		win_opts="-prefs=runtime.tools.ctags.path=$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version -prefs=runtime.tools.arduino-preprocessor.path=$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version"
 	fi
 
+	echo "Compiling '"$(basename "$sketch")"' as '$fqbn'..."
 	mkdir -p "$ARDUINO_BUILD_DIR"
 	mkdir -p "$ARDUINO_CACHE_DIR"
 	$ARDUINO_IDE_PATH/arduino-builder -compile -logger=human -core-api-version=10810 \
@@ -92,10 +93,12 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 		-build-cache "$ARDUINO_CACHE_DIR" \
 		-build-path "$ARDUINO_BUILD_DIR" \
 		$win_opts $xtra_opts "$sketch"
+	echo ""
 }
 
 echo "Arduino IDE Installed in '$ARDUINO_IDE_PATH'"
-echo "You can install boards in '$ARDUINO_IDE_PATH/hardware' or in '$ARDUINO_USR_PATH/hardware'"
-echo "User libraries should be installed in '$ARDUINO_USR_PATH/libraries'"
-echo "Then you can call 'build_sketch <fqbn> <path-to-ino> [extra-options]' to build your sketches"
+# echo "You can install boards in '$ARDUINO_IDE_PATH/hardware' or in '$ARDUINO_USR_PATH/hardware'"
+# echo "User libraries should be installed in '$ARDUINO_USR_PATH/libraries'"
+# echo "Then you can call 'build_sketch <fqbn> <path-to-ino> [extra-options]' to build your sketches"
+echo ""
 

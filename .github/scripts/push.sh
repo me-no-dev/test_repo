@@ -19,5 +19,4 @@ fi
 source "$GITHUB_WORKSPACE/install-arduino.sh"
 source "$GITHUB_WORKSPACE/install-arduino-core-esp32.sh"
 
-echo "Compiling Sketch"
 build_sketch "espressif:esp32:esp32" "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"

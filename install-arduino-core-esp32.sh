@@ -21,3 +21,4 @@ python get.py > /dev/null
 cd $GITHUB_WORKSPACE
 
 echo "ESP32 Arduino has been installed in '$ARDUINO_USR_PATH/hardware/espressif'"
+echo ""
