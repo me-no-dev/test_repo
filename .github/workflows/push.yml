@@ -9,17 +9,20 @@ on:
 
 jobs:
   build:
-    name: Build on ${{ matrix.os }}
+    name: Build ${{ matrix.chunk }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
+        chunk: [0, 1, 2, 3, 4, 5]
     
     steps:
     - uses: actions/checkout@v1
     - name: Build
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CHUNK_INDEX: ${{ matrix.chunk }}
+        CHUNKS_CNT: 6
       run: bash ./.github/scripts/push.sh
     #- name: Upload build artifacts
     #  uses: actions/upload-artifact@v1
