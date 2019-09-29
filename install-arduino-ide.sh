@@ -63,7 +63,7 @@ if [ ! -d "$ARDUINO_IDE_PATH" ]; then
 		unzip "arduino.$ARCHIVE_FORMAT" > /dev/null
 		if [ $? -ne 0 ]; then exit 1; fi
 		if [ "$OS_IS_MACOS" == "1" ]; then
-			mv "Arduino.app" "$HOME/Arduino.app"
+			mv "Arduino.app" "/Applications/Arduino.app"
 		else
 			mv arduino-nightly "$ARDUINO_IDE_PATH"
 		fi
@@ -146,6 +146,7 @@ function build_sketches() # build_sketches <examples-path> <fqbn> <chunk> <total
     count_sketches "$examples"
     local sketchcount=$?
     local sketches=$(cat sketches.txt)
+    rm -rf sketches.txt
 
     local chunk_size=$(( $sketchcount / $chunks_num ))
     local all_chunks=$(( $chunks_num * $chunk_size ))
@@ -176,21 +177,13 @@ function build_sketches() # build_sketches <examples-path> <fqbn> <chunk> <total
         local sketchdir=$(dirname $sketch)
         local sketchdirname=$(basename $sketchdir)
         local sketchname=$(basename $sketch)
-        if [[ "${sketchdirname}.ino" != "$sketchname" ]]; then
-            #echo "Skipping $sketch, beacause it is not the main sketch file";
-            continue
-        fi;
-        if [[ -f "$sketchdir/.test.skip" ]]; then
-            #echo "Skipping $sketch marked";
+        if [ "${sketchdirname}.ino" != "$sketchname" ] \
+        || [ -f "$sketchdir/.test.skip" ]; then
             continue
         fi
         sketchnum=$(($sketchnum + 1))
-        if [ "$sketchnum" -le "$start_index" ]; then
-        	#echo "Skipping $sketch index low"
-        	continue
-        fi
-        if [ "$sketchnum" -gt "$end_index" ]; then
-        	#echo "Skipping $sketch index high"
+        if [ "$sketchnum" -le "$start_index" ] \
+        || [ "$sketchnum" -gt "$end_index" ]; then
         	continue
         fi
         build_sketch "$fqbn" "$sketch" "$xtra_opts"
