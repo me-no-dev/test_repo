@@ -40,7 +40,7 @@ function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino> [extra-opt
 	local sketch_dir=$(dirname "$sketch")
 	echo ""
 	echo "Compiling '"$(basename "$sketch")"'..."
-	python -m platformio ci  --board "$board" "$sketch_dir" ${@:3}
+	python -m platformio ci  --board "$board" "$sketch_dir" --project-option="board_build.partitions = huge_app.csv"
 }
 
-build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino" --project-option="board_build.partitions = huge_app.csv"
+build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
