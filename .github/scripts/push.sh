@@ -16,10 +16,15 @@ if [ $GITHUB_EVENT_NAME == "pull_request" ]; then
     echo "Action: $action, Mergeable: $mergeable_state"
 fi
 
-source "$GITHUB_WORKSPACE/install-arduino.sh"
+if [ -x $CHUNK_INDEX ] ||  [ -x $CHUNKS_CNT ]; then
+    echo "Chunk index and/or count are not defined"
+    exit 1
+fi
+
+source "$GITHUB_WORKSPACE/install-arduino-ide.sh"
 source "$GITHUB_WORKSPACE/install-arduino-core-esp32.sh"
 
 #build_sketch "espressif:esp32:esp32" "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
-build_sketches "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries" "espressif:esp32:esp32:PSRAM=enabled,PartitionScheme=huge_app" 1 6
+build_sketches "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries" "espressif:esp32:esp32:PSRAM=enabled,PartitionScheme=huge_app" "$CHUNK_INDEX" "$CHUNKS_CNT"
 
 if [ $? -ne 0 ]; then exit 1; fi

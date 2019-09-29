@@ -130,6 +130,16 @@ function build_sketches() # build_sketches <examples-path> <fqbn> <chunk> <total
     local chunk_idex=$3
     local chunks_num=$4
     local xtra_opts=$5
+
+	if [ "$chunks_num" -le 0 ]; then
+		echo "ERROR: Chunks count must be positive number"
+		return 1
+	fi
+	if [ "$chunk_idex" -ge "$chunks_num" ]; then
+		echo "ERROR: Chunk index must be less than chunks count"
+		return 1
+	fi
+
     count_sketches "$examples"
     local sketchcount=$?
     local sketches=$(cat sketches.txt)
