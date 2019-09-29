@@ -75,7 +75,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 	if [ "$OS_IS_WINDOWS" == "1" ]; then
 		local ctags_version=`ls "$ARDUINO_IDE_PATH/tools-builder/ctags/"`
 		local preprocessor_version=`ls "$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/"`
-		win_opts='-prefs=runtime.tools.ctags.path="$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version" -prefs=runtime.tools.arduino-preprocessor.path="$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version"'
+		win_opts="-prefs=runtime.tools.ctags.path='$ARDUINO_IDE_PATH/tools-builder/ctags/$ctags_version' -prefs=runtime.tools.arduino-preprocessor.path='$ARDUINO_IDE_PATH/tools-builder/arduino-preprocessor/$preprocessor_version'"
 	fi
 
 	mkdir -p "$ARDUINO_BUILD_DIR"
@@ -84,6 +84,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 		-fqbn=$fqbn \
 		-warnings="all" \
 		-tools "$ARDUINO_IDE_PATH/tools-builder" \
+		-tools "$ARDUINO_IDE_PATH/tools" \
 		-built-in-libraries "$ARDUINO_IDE_PATH/libraries" \
 		-hardware "$ARDUINO_IDE_PATH/hardware" \
 		-hardware "$ARDUINO_USR_PATH/hardware" \
