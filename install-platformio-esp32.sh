@@ -44,4 +44,4 @@ function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino> [extra-opt
 	python -m platformio ci  --board "$board" "$sketch_dir" $xtra_opts
 }
 
-build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino" "--project-option=\"board_build.partitions = huge_app.csv\""
+build_pio_sketch "esp32dev" "$HOME/.platformio/packages/framework-arduinoespressif32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino" #"--project-option=\"board_build.partitions = huge_app.csv\""
