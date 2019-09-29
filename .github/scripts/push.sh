@@ -27,6 +27,6 @@ source "$GITHUB_WORKSPACE/install-arduino-core-esp8266.sh"
 
 #build_sketch "espressif:esp32:esp32" "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
 #build_sketches "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries" "espressif:esp32:esp32:PSRAM=enabled,PartitionScheme=huge_app" "$CHUNK_INDEX" "$CHUNKS_CNT"
-build_sketches "$ARDUINO_USR_PATH/hardware/esp8266com/esp8266/libraries" "esp8266com:esp8266:generic" "$CHUNK_INDEX" "$CHUNKS_CNT"
+build_sketches "$ARDUINO_USR_PATH/hardware/esp8266com/esp8266/libraries" "esp8266com:esp8266:generic:eesz=4M1M,ip=lm2f" "$CHUNK_INDEX" "$CHUNKS_CNT"
 
 if [ $? -ne 0 ]; then exit 1; fi
