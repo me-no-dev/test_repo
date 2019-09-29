@@ -20,6 +20,6 @@ source "$GITHUB_WORKSPACE/install-arduino.sh"
 source "$GITHUB_WORKSPACE/install-arduino-core-esp32.sh"
 
 #build_sketch "espressif:esp32:esp32" "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries/ESP32/examples/AnalogOut/ledcWrite_RGB/ledcWrite_RGB.ino"
-build_sketches "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries" "espressif:esp32:esp32" 1 6
+build_sketches "$ARDUINO_USR_PATH/hardware/espressif/esp32/libraries" "espressif:esp32:esp32:PSRAM=enabled,PartitionScheme=huge_app" 1 6
 
 if [ $? -ne 0 ]; then exit 1; fi
