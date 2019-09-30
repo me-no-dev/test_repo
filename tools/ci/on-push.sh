@@ -39,18 +39,35 @@ fi
 
 if [ "$BUILD_PIO" -eq 0 ]; then
 	# ArduinoIDE Test
+	FQBN="espressif:esp32:esp32:PSRAM=enabled,PartitionScheme=huge_app"
 	source ./tools/ci/install-arduino-ide.sh
 	source ./tools/ci/install-arduino-core-esp32.sh
-	build_sketches "$GITHUB_WORKSPACE/libraries" "espressif:esp32:esp32:PSRAM=enabled,PartitionScheme=huge_app" "$CHUNK_INDEX" "$CHUNKS_CNT"
+	if [ "$OS_IS_WINDOWS" == "1" ] ||  [ "$OS_IS_MACOS" == "1" ]; then
+		build_sketch "$FQBN" "$GITHUB_WORKSPACE/libraries/WiFi/examples/WiFiClient/WiFiClient.ino" && \
+		build_sketch "$FQBN" "$GITHUB_WORKSPACE/libraries/WiFiClientSecure/examples/WiFiClientSecure/WiFiClientSecure.ino" && \
+		build_sketch "$FQBN" "$GITHUB_WORKSPACE/libraries/BluetoothSerial/examples/SerialToSerialBT/SerialToSerialBT.ino" && \
+		build_sketch "$FQBN" "$GITHUB_WORKSPACE/libraries/BLE/examples/BLE_server/BLE_server.ino" && \
+		build_sketch "$FQBN" "$GITHUB_WORKSPACE/libraries/AzureIoT/examples/GetStarted/GetStarted.ino" && \
+		build_sketch "$FQBN" "$GITHUB_WORKSPACE/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
+	else
+		build_sketches "$GITHUB_WORKSPACE/libraries" "$FQBN" "$CHUNK_INDEX" "$CHUNKS_CNT"
+	fi
 else
 	# PlatformIO Test
 	source ./tools/ci/install-platformio-esp32.sh
-	python -m platformio ci  --board esp32dev libraries/WiFi/examples/WiFiClient && \
-	python -m platformio ci  --board esp32dev libraries/WiFiClientSecure/examples/WiFiClientSecure && \
-	python -m platformio ci  --board esp32dev libraries/BluetoothSerial/examples/SerialToSerialBT && \
-	python -m platformio ci  --board esp32dev libraries/BLE/examples/BLE_server && \
-	python -m platformio ci  --board esp32dev libraries/AzureIoT/examples/GetStarted && \
-	python -m platformio ci  --board esp32dev libraries/ESP32/examples/Camera/CameraWebServer --project-option="board_build.partitions = huge_app.csv"
+	BOARD="esp32dev"
+	build_pio_sketch "$BOARD" "$GITHUB_WORKSPACE/libraries/WiFi/examples/WiFiClient/WiFiClient.ino" && \
+	build_pio_sketch "$BOARD" "$GITHUB_WORKSPACE/libraries/WiFiClientSecure/examples/WiFiClientSecure/WiFiClientSecure.ino" && \
+	build_pio_sketch "$BOARD" "$GITHUB_WORKSPACE/libraries/BluetoothSerial/examples/SerialToSerialBT/SerialToSerialBT.ino" && \
+	build_pio_sketch "$BOARD" "$GITHUB_WORKSPACE/libraries/BLE/examples/BLE_server/BLE_server.ino" && \
+	build_pio_sketch "$BOARD" "$GITHUB_WORKSPACE/libraries/AzureIoT/examples/GetStarted/GetStarted.ino" && \
+	build_pio_sketch "$BOARD" "$GITHUB_WORKSPACE/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
+	# python -m platformio ci  --board esp32dev libraries/WiFi/examples/WiFiClient && \
+	# python -m platformio ci  --board esp32dev libraries/WiFiClientSecure/examples/WiFiClientSecure && \
+	# python -m platformio ci  --board esp32dev libraries/BluetoothSerial/examples/SerialToSerialBT && \
+	# python -m platformio ci  --board esp32dev libraries/BLE/examples/BLE_server && \
+	# python -m platformio ci  --board esp32dev libraries/AzureIoT/examples/GetStarted && \
+	# python -m platformio ci  --board esp32dev libraries/ESP32/examples/Camera/CameraWebServer --project-option="board_build.partitions = huge_app.csv"
 	#build_pio_sketches libraries esp32dev $CHUNK_INDEX $CHUNKS_CNT
-	if [ $? -ne 0 ]; then exit 1; fi
 fi
+if [ $? -ne 0 ]; then exit 1; fi

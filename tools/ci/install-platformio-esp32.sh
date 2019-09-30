@@ -34,7 +34,7 @@ echo "PlatformIO for ESP32 has been installed"
 echo ""
 
 
-function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino> [extra-options]
+function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino>
 	local board="$1"
 	local sketch="$2"
 	local sketch_dir=$(dirname "$sketch")
