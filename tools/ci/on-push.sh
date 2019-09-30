@@ -1,40 +1,31 @@
 #!/bin/bash
 
-if [ ! $GITHUB_EVENT_NAME == "push" ] && [ ! $GITHUB_EVENT_NAME == "pull_request" ]; then
-    echo "Wrong event '$GITHUB_EVENT_NAME'!"
-    exit 1
+if [ ! -z "$TRAVIS_TAG" ]; then
+	echo "Skipping Test: Tagged build"
+	exit 0
 fi
 
-echo "Event: $GITHUB_EVENT_NAME, Repo: $GITHUB_REPOSITORY, Path: $GITHUB_WORKSPACE, Ref: $GITHUB_REF"
-
-EVENT_JSON=`cat $GITHUB_EVENT_PATH`
-
-# Pull Request Actions [opened, reopened, synchronize]
-if [ $GITHUB_EVENT_NAME == "pull_request" ]; then
-    action=`echo $EVENT_JSON | jq -r '.action'`
-    mergeable_state=`echo $EVENT_JSON | jq -r '.pull_request.mergeable_state'`
-    echo "Action: $action, Mergeable: $mergeable_state"
+if [ ! -z "$GITHUB_WORKSPACE" ]; then
+	export TRAVIS_BUILD_DIR="$GITHUB_WORKSPACE"
+	export TRAVIS_REPO_SLUG="$GITHUB_REPOSITORY"
+elif [ ! -z "$TRAVIS_BUILD_DIR" ]; then
+	export GITHUB_WORKSPACE="$TRAVIS_BUILD_DIR"
+	export GITHUB_REPOSITORY="$TRAVIS_REPO_SLUG"
+else
+	export GITHUB_WORKSPACE="$PWD"
+	export GITHUB_REPOSITORY="espressif/arduino-esp32"
 fi
 
 CHUNK_INDEX=$1
 CHUNKS_CNT=$2
 BUILD_PIO=0
-if [ "$#" -lt 2 ] ||  [ "$CHUNKS_CNT" -le 0 ]; then
-	echo "Building all sketches"
+if [ "$#" -lt 2 ] || [ "$CHUNKS_CNT" -le 0 ]; then
 	CHUNK_INDEX=0
 	CHUNKS_CNT=1
-fi
-if [ "$CHUNK_INDEX" -gt "$CHUNKS_CNT" ]; then
+elif [ "$CHUNK_INDEX" -gt "$CHUNKS_CNT" ]; then
 	CHUNK_INDEX=$CHUNKS_CNT
-fi
-if [ "$CHUNK_INDEX" -eq "$CHUNKS_CNT" ]; then
+elif [ "$CHUNK_INDEX" -eq "$CHUNKS_CNT" ]; then
 	BUILD_PIO=1
-fi
-
-# CMake Test
-if [ "$CHUNK_INDEX" -eq 0 ]; then
-	bash ./tools/ci/check-cmakelists.sh
-	if [ $? -ne 0 ]; then exit 1; fi
 fi
 
 if [ "$BUILD_PIO" -eq 0 ]; then
@@ -55,6 +46,11 @@ if [ "$BUILD_PIO" -eq 0 ]; then
 		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/AzureIoT/examples/GetStarted/GetStarted.ino" && \
 		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
 	else
+		# CMake Test
+		if [ "$CHUNK_INDEX" -eq 0 ]; then
+			bash "$ARDUINO_ESP32_PATH/tools/ci/check-cmakelists.sh"
+			if [ $? -ne 0 ]; then exit 1; fi
+		fi
 		build_sketches "$FQBN" "$ARDUINO_ESP32_PATH/libraries" "$CHUNK_INDEX" "$CHUNKS_CNT"
 	fi
 else
