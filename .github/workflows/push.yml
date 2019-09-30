@@ -33,7 +33,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build Sketches
-      run: bash ./tools/ci/on-push.sh 1 30
+      run: bash ./tools/ci/on-push.sh
 
   # PlatformIO on Windows, Ubuntu and Mac
   build-platformio:
@@ -46,7 +46,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build Sketches
-      run: bash ./tools/ci/on-push.sh 1 1
+      run: bash ./tools/ci/on-push.sh 1 1 #equal and non-zero to trigger PIO
       
       
 #   build:
