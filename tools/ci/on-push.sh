@@ -42,7 +42,12 @@ if [ "$BUILD_PIO" -eq 0 ]; then
 	FQBN="espressif:esp32:esp32:PSRAM=enabled,PartitionScheme=huge_app"
 	source ./tools/ci/install-arduino-ide.sh
 	source ./tools/ci/install-arduino-core-esp32.sh
-	if [ "$OS_IS_WINDOWS" == "1" ] ||  [ "$OS_IS_MACOS" == "1" ]; then
+	if [ "$OS_IS_WINDOWS" == "1" ]; then
+		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/WiFiClientSecure/examples/WiFiClientSecure/WiFiClientSecure.ino" && \
+		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/BLE/examples/BLE_server/BLE_server.ino" && \
+		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/AzureIoT/examples/GetStarted/GetStarted.ino" && \
+		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
+	elif [ "$OS_IS_MACOS" == "1" ]; then
 		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/WiFi/examples/WiFiClient/WiFiClient.ino" && \
 		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/WiFiClientSecure/examples/WiFiClientSecure/WiFiClientSecure.ino" && \
 		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/BluetoothSerial/examples/SerialToSerialBT/SerialToSerialBT.ino" && \
@@ -62,12 +67,6 @@ else
 	build_pio_sketch "$BOARD" "$PLATFORMIO_ESP32_PATH/libraries/BLE/examples/BLE_server/BLE_server.ino" && \
 	build_pio_sketch "$BOARD" "$PLATFORMIO_ESP32_PATH/libraries/AzureIoT/examples/GetStarted/GetStarted.ino" && \
 	build_pio_sketch "$BOARD" "$PLATFORMIO_ESP32_PATH/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
-	# python -m platformio ci  --board esp32dev libraries/WiFi/examples/WiFiClient && \
-	# python -m platformio ci  --board esp32dev libraries/WiFiClientSecure/examples/WiFiClientSecure && \
-	# python -m platformio ci  --board esp32dev libraries/BluetoothSerial/examples/SerialToSerialBT && \
-	# python -m platformio ci  --board esp32dev libraries/BLE/examples/BLE_server && \
-	# python -m platformio ci  --board esp32dev libraries/AzureIoT/examples/GetStarted && \
-	# python -m platformio ci  --board esp32dev libraries/ESP32/examples/Camera/CameraWebServer --project-option="board_build.partitions = huge_app.csv"
 	#build_pio_sketches libraries esp32dev $CHUNK_INDEX $CHUNKS_CNT
 fi
 if [ $? -ne 0 ]; then exit 1; fi
