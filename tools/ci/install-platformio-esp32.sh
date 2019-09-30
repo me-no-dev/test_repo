@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PLATFORMIO_ESP32_PATH="$HOME/.platformio/packages/framework-arduinoespressif32"
+
 echo "Installing Python Wheel..."
 pip install wheel > /dev/null 2>&1
 if [ $? -ne 0 ]; then echo "ERROR: Install failed"; exit 1; fi
@@ -23,10 +25,10 @@ if [ $? -ne 0 ]; then echo "ERROR: Replace failed"; exit 1; fi
 
 if [ "$GITHUB_REPOSITORY" == "espressif/arduino-esp32" ];  then
 	echo "Linking Core..." && \
-	ln -s $GITHUB_WORKSPACE "$HOME/.platformio/packages/framework-arduinoespressif32"
+	ln -s $GITHUB_WORKSPACE "$PLATFORMIO_ESP32_PATH"
 else
 	echo "Cloning Core Repository..." && \
-	git clone https://github.com/espressif/arduino-esp32.git "$HOME/.platformio/packages/framework-arduinoespressif32" > /dev/null 2>&1
+	git clone https://github.com/espressif/arduino-esp32.git "$PLATFORMIO_ESP32_PATH" > /dev/null 2>&1
 	if [ $? -ne 0 ]; then echo "ERROR: GIT clone failed"; exit 1; fi
 fi
 
