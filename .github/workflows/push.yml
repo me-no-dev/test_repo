@@ -24,7 +24,7 @@ jobs:
 
   # Windows and MacOS
   build-arduino-win-mac:
-    name: Arduino ${{ matrix.chunk }} on ${{ matrix.os }}
+    name: Arduino on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
