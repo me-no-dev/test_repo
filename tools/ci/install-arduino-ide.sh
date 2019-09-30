@@ -45,9 +45,8 @@ else
 	export ARDUINO_USR_PATH="$HOME/Arduino"
 fi
 
-echo "Installing Arduino IDE on $OS_NAME..."
-
 if [ ! -d "$ARDUINO_IDE_PATH" ]; then
+	echo "Installing Arduino IDE on $OS_NAME..."
 	echo "Downloading 'arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT' to 'arduino.$ARCHIVE_FORMAT'..."
 	if [ "$OS_IS_LINUX" == "1" ]; then
 		wget -O "arduino.$ARCHIVE_FORMAT" "https://www.arduino.cc/download.php?f=/arduino-nightly-$OS_NAME.$ARCHIVE_FORMAT" > /dev/null 2>&1
@@ -70,10 +69,13 @@ if [ ! -d "$ARDUINO_IDE_PATH" ]; then
 	fi
 	if [ $? -ne 0 ]; then exit 1; fi
 	rm -rf "arduino.$ARCHIVE_FORMAT"
-fi
 
-mkdir -p "$ARDUINO_USR_PATH/libraries"
-mkdir -p "$ARDUINO_USR_PATH/hardware"
+	mkdir -p "$ARDUINO_USR_PATH/libraries"
+	mkdir -p "$ARDUINO_USR_PATH/hardware"
+
+	echo "Arduino IDE Installed in '$ARDUINO_IDE_PATH'"
+	echo ""
+fi
 
 function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
     if [ "$#" -lt 2 ]; then
@@ -81,7 +83,7 @@ function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
 		echo "USAGE: build_sketch <fqbn> <path-to-ino> [extra-options]"
 		return 1
 	fi
-	
+
 	local fqbn="$1"
 	local sketch="$2"
 	local xtra_opts="$3"
@@ -212,10 +214,4 @@ function build_sketches() # build_sketches <fqbn> <examples-path> <chunk> <total
     done
     return 0
 }
-
-echo "Arduino IDE Installed in '$ARDUINO_IDE_PATH'"
-# echo "You can install boards in '$ARDUINO_IDE_PATH/hardware' or in '$ARDUINO_USR_PATH/hardware'"
-# echo "User libraries should be installed in '$ARDUINO_USR_PATH/libraries'"
-# echo "Then you can call 'build_sketch <fqbn> <path-to-ino> [extra-options]' to build your sketches"
-echo ""
 
