@@ -37,6 +37,12 @@ echo ""
 
 
 function build_pio_sketch(){ # build_pio_sketch <board> <path-to-ino>
+    if [ "$#" -lt 2 ]; then
+        echo "ERROR: Illegal number of parameters"
+        echo "USAGE: build_pio_sketch <board> <path-to-ino>"
+        return 1
+    fi
+
 	local board="$1"
 	local sketch="$2"
 	local sketch_dir=$(dirname "$sketch")
@@ -67,12 +73,23 @@ function count_sketches() # count_sketches <examples-path>
     return $sketchnum
 }
 
-function build_pio_sketches() # build_pio_sketches <examples-path> <board> <chunk> <total-chunks>
+function build_pio_sketches() # build_pio_sketches <board> <examples-path> <chunk> <total-chunks>
 {
-    local examples=$1
-    local board=$2
+    if [ "$#" -lt 2 ]; then
+        echo "ERROR: Illegal number of parameters"
+        echo "USAGE: build_pio_sketches <board> <examples-path> [<chunk> <total-chunks>]"
+        return 1
+    fi
+
+    local board=$1
+    local examples=$2
     local chunk_idex=$3
     local chunks_num=$4
+
+    if [ "$#" -lt 4 ]; then
+        chunk_idex="0"
+        chunks_num="1"
+    fi
 
 	if [ "$chunks_num" -le 0 ]; then
 		echo "ERROR: Chunks count must be positive number"

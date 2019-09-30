@@ -76,6 +76,12 @@ mkdir -p "$ARDUINO_USR_PATH/libraries"
 mkdir -p "$ARDUINO_USR_PATH/hardware"
 
 function build_sketch(){ # build_sketch <fqbn> <path-to-ino> [extra-options]
+    if [ "$#" -lt 2 ]; then
+		echo "ERROR: Illegal number of parameters"
+		echo "USAGE: build_sketch <fqbn> <path-to-ino> [extra-options]"
+		return 1
+	fi
+	
 	local fqbn="$1"
 	local sketch="$2"
 	local xtra_opts="$3"
@@ -126,13 +132,25 @@ function count_sketches() # count_sketches <examples-path>
     return $sketchnum
 }
 
-function build_sketches() # build_sketches <examples-path> <fqbn> <chunk> <total-chunks> [extra-options]
+function build_sketches() # build_sketches <fqbn> <examples-path> <chunk> <total-chunks> [extra-options]
 {
-    local examples=$1
-    local fqbn=$2
+    local fqbn=$1
+    local examples=$2
     local chunk_idex=$3
     local chunks_num=$4
     local xtra_opts=$5
+
+    if [ "$#" -lt 2 ]; then
+		echo "ERROR: Illegal number of parameters"
+		echo "USAGE: build_sketches <fqbn> <examples-path> [<chunk> <total-chunks>] [extra-options]"
+		return 1
+	fi
+
+    if [ "$#" -lt 4 ]; then
+		chunk_idex="0"
+		chunks_num="1"
+		xtra_opts=$3
+	fi
 
 	if [ "$chunks_num" -le 0 ]; then
 		echo "ERROR: Chunks count must be positive number"

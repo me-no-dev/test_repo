@@ -55,7 +55,7 @@ if [ "$BUILD_PIO" -eq 0 ]; then
 		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/AzureIoT/examples/GetStarted/GetStarted.ino" && \
 		build_sketch "$FQBN" "$ARDUINO_ESP32_PATH/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
 	else
-		build_sketches "$ARDUINO_ESP32_PATH/libraries" "$FQBN" "$CHUNK_INDEX" "$CHUNKS_CNT"
+		build_sketches "$FQBN" "$ARDUINO_ESP32_PATH/libraries" "$CHUNK_INDEX" "$CHUNKS_CNT"
 	fi
 else
 	# PlatformIO Test
@@ -67,6 +67,6 @@ else
 	build_pio_sketch "$BOARD" "$PLATFORMIO_ESP32_PATH/libraries/BLE/examples/BLE_server/BLE_server.ino" && \
 	build_pio_sketch "$BOARD" "$PLATFORMIO_ESP32_PATH/libraries/AzureIoT/examples/GetStarted/GetStarted.ino" && \
 	build_pio_sketch "$BOARD" "$PLATFORMIO_ESP32_PATH/libraries/ESP32/examples/Camera/CameraWebServer/CameraWebServer.ino"
-	#build_pio_sketches libraries esp32dev $CHUNK_INDEX $CHUNKS_CNT
+	#build_pio_sketches esp32dev "$PLATFORMIO_ESP32_PATH/libraries"
 fi
 if [ $? -ne 0 ]; then exit 1; fi
