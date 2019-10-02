@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 if [ ! $GITHUB_EVENT_NAME == "release" ]; then
     echo "Wrong event '$GITHUB_EVENT_NAME'!"
@@ -27,10 +28,23 @@ if [ ! $action == "published" ]; then
 	exit 0
 fi
 
+function get_file_size(){
+    local file="$1"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        eval `stat -s "$file"`
+        local res="$?"
+        echo "$st_size"
+        return $res
+    else
+        stat --printf="%s" "$file"
+        return $?
+    fi
+}
+
 function git_upload_asset(){
     local name=$(basename "$1")
-    local mime=$(file -b --mime-type "$1")
-    curl -k -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw+json" -H "Content-Type: $mime" --data "@$1" "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id/assets?name=$name"
+    # local mime=$(file -b --mime-type "$1")
+    curl -k -X POST -sH "Authorization: token $GITHUB_TOKEN" -H "Content-Type: application/octet-stream" --data-binary @"$1" "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets?name=$name"
 }
 
 function git_upload_to_pages(){
@@ -38,7 +52,7 @@ function git_upload_to_pages(){
     local src=$2
 
     if [ ! -f "$src" ]; then
-        echo "Input is not a file! Aborting..."
+        >&2 echo "Input is not a file! Aborting..."
         return 1
     fi
 
@@ -53,7 +67,7 @@ function git_upload_to_pages(){
         sha=",\"sha\":\"$sha\""
         message="Updating $message"
     elif [ ! $type == "null" ]; then
-        echo "Wrong type '$type'"
+        >&2 echo "Wrong type '$type'"
         return 1
     else
         message="Creating $message"
@@ -65,13 +79,56 @@ function git_upload_to_pages(){
     echo "$data" | curl -s -k -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw+json" -X PUT --data @- "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/$path"
 }
 
+function git_safe_upload_asset(){
+    local file="$1"
+    local name=$(basename "$file")
+    local size=`get_file_size "$file"`
+    set +e
+    local upload_res=`git_upload_asset "$file"`
+    if [ $? -ne 0 ]; then 
+        >&2 echo "ERROR: Failed to upload '$name' ($?)"
+        set -e
+        return 1
+    fi
+    set -e
+    up_size=`echo "$upload_res" | jq -r '.size'`
+    if [ $up_size -ne $size ]; then
+        >&2 echo "ERROR: Uploaded size does not match! $up_size != $size"
+        return 1
+    fi
+    echo "$upload_res" | jq -r '.browser_download_url'
+    return $?
+}
+
+function git_safe_upload_to_pages(){
+    local path=$1
+    local file="$2"
+    local name=$(basename "$file")
+    local size=`get_file_size "$file"`
+    set +e
+    local upload_res=`git_upload_to_pages "$path" "$file"`
+    if [ $? -ne 0 ]; then 
+        >&2 echo "ERROR: Failed to upload '$name' ($?)"
+        set -e
+        return 1
+    fi
+    set -e
+    up_size=`echo "$upload_res" | jq -r '.content.size'`
+    if [ $up_size -ne $size ]; then
+        >&2 echo "ERROR: Uploaded size does not match! $up_size != $size"
+        return 1
+    fi
+    echo "$upload_res" | jq -r '.content.download_url'
+    return $?
+}
+
 # good time to build the assets
 if [ $prerelease == "true" ]; then
 	echo "It's a pre-release"
 fi
 
 # upload asset to the release page
-git_upload_asset ./README.md
+git_safe_upload_asset ./README.md
 
 # upload file to github pages
-git_upload_to_pages README.md ./README.md
+git_safe_upload_to_pages README.md ./README.md
