@@ -11,7 +11,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     
     steps:
-#     - uses: actions/checkout@v1
+    - uses: actions/checkout@v1
     - name: Install Arduino IDE
       uses: me-no-dev/arduino-ide-action@master
       with:
