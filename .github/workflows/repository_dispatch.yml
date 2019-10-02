@@ -14,7 +14,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: bash ./.github/scripts/repository_dispatch.sh
     - name: Upload build artifacts
-     uses: actions/upload-artifact@v1
-     with:
-       name: artifacts
-       path: build
+      uses: actions/upload-artifact@v1
+      with:
+        name: artifacts
+        path: build
