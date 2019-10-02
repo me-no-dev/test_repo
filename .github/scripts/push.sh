@@ -25,7 +25,7 @@ if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "
 	pip install requests
 fi
 
-python -m pyinstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/esptool.py
-python -m pyinstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/get.py
-python -m pyinstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/espota.py
-python -m pyinstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/gen_esp32part.py
+python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/esptool.py
+python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/get.py
+python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/espota.py
+python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/gen_esp32part.py
