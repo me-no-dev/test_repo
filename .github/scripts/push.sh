@@ -16,16 +16,13 @@ if [ $GITHUB_EVENT_NAME == "pull_request" ]; then
     echo "Action: $action, Mergeable: $mergeable_state"
 fi
 
-mkdir -p build .tmp
-
-pip install wheel
-pip install PyInstaller pyserial
-
-if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
-	pip install requests
-fi
-
-python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/esptool.py
-python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/get.py
-python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/espota.py
-python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/gen_esp32part.py
+# mkdir -p build .tmp
+# pip install wheel
+# pip install PyInstaller pyserial
+# if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+# 	pip install requests
+# fi
+# python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/esptool.py
+# python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/get.py
+# python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/espota.py
+# python -m PyInstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/gen_esp32part.py
