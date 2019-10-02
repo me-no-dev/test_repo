@@ -18,7 +18,7 @@ fi
 
 mkdir -p build
 
-pip install PyInstaller pyserial
+pip install wheel PyInstaller pyserial
 
 if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
 	pip install requests
