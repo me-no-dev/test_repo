@@ -25,7 +25,7 @@ if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "
 	pip install requests
 fi
 
-pyinstaller --distpath build -F esptool.py
-pyinstaller --distpath build -F get.py
-pyinstaller --distpath build -F espota.py
-pyinstaller --distpath build -F gen_esp32part.py
+python -m pyinstaller --distpath build -F tools/esptool.py
+python -m pyinstaller --distpath build -F tools/get.py
+python -m pyinstaller --distpath build -F tools/espota.py
+python -m pyinstaller --distpath build -F tools/gen_esp32part.py
