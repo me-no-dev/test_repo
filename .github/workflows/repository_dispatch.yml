@@ -9,6 +9,11 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - name: Install Arduino IDE
+      uses: me-no-dev/arduino-ide-action@master
+      with:
+        ide_path: $HOME/arduino-ide
+        usr_path: $HOME/Arduino
     - name: Handle Event
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
