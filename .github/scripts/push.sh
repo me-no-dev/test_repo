@@ -16,7 +16,7 @@ if [ $GITHUB_EVENT_NAME == "pull_request" ]; then
     echo "Action: $action, Mergeable: $mergeable_state"
 fi
 
-mkdir -p build
+mkdir -p build .tmp
 
 pip install wheel
 pip install PyInstaller pyserial
@@ -25,7 +25,7 @@ if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "
 	pip install requests
 fi
 
-python -m pyinstaller --distpath build -F tools/esptool.py
-python -m pyinstaller --distpath build -F tools/get.py
-python -m pyinstaller --distpath build -F tools/espota.py
-python -m pyinstaller --distpath build -F tools/gen_esp32part.py
+python -m pyinstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/esptool.py
+python -m pyinstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/get.py
+python -m pyinstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/espota.py
+python -m pyinstaller --win-private-assemblies --distpath build --workpath .tmp -F tools/gen_esp32part.py
