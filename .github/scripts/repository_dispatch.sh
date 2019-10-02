@@ -11,3 +11,5 @@ EVENT_JSON=`cat $GITHUB_EVENT_PATH`
 action=`echo $EVENT_JSON | jq -r '.action'`
 payload=`echo $EVENT_JSON | jq -r '.client_payload'`
 echo "Action: $action, Payload: $payload"
+
+env
